@@ -1,6 +1,6 @@
 # Skivvy package: `clean`
 [![npm version](https://img.shields.io/npm/v/@skivvy/skivvy-package-clean.svg)](https://www.npmjs.com/package/@skivvy/skivvy-package-clean)
-![Stability](https://img.shields.io/badge/stability-stable-green.svg)
+![Stability](https://img.shields.io/badge/stability-stable-brightgreen.svg)
 [![Build Status](https://travis-ci.org/skivvyjs/skivvy-package-clean.svg?branch=master)](https://travis-ci.org/skivvyjs/skivvy-package-clean)
 
 > Delete files and folders
