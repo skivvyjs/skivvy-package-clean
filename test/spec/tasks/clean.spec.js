@@ -8,9 +8,9 @@ var sinonChai = require('sinon-chai');
 var Promise = require('promise');
 var rewire = require('rewire');
 
-var clean = rewire('../../tasks/clean');
+var task = rewire('../../../tasks/clean');
 var del = createMockDel();
-clean.__set__('del', del);
+task.__set__('del', del);
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -18,8 +18,8 @@ chai.use(sinonChai);
 function createMockDel() {
 	return sinon.spy(function(path, options, callback) {
 		setTimeout(function() {
-			if (path === 'invalid') {
-				callback(new Error('Invalid path'));
+			if (path === 'error') {
+				callback(new Error('Test error'));
 			} else {
 				var results = Array.isArray(path) ? path : [path];
 				callback(null, results);
@@ -34,20 +34,20 @@ describe('clean', function() {
 	});
 
 	it('should specify a description', function() {
-		expect(clean.description).to.be.a('string');
+		expect(task.description).to.be.a('string');
 	});
 
 	it('should specify defaults', function() {
-		expect(clean.defaults.path).to.equal(null);
-		expect(clean.defaults.options).to.equal(null);
+		expect(task.defaults.path).to.equal(null);
+		expect(task.defaults.options).to.equal(null);
 	});
 
 	it('should throw an error if no path is specified', function() {
 		var promises = [
-			clean({}),
-			clean({ path: undefined }),
-			clean({ path: null }),
-			clean({ path: false })
+			task({}),
+			task({ path: undefined }),
+			task({ path: null }),
+			task({ path: false })
 		];
 		return Promise.all(promises.map(function(promise) {
 			expect(promise).to.be.rejectedWith('No path');
@@ -55,7 +55,7 @@ describe('clean', function() {
 	});
 
 	it('should delete files and return result (string)', function() {
-		return clean({
+		return task({
 			path: 'hello-world'
 		})
 			.then(function(results) {
@@ -65,7 +65,7 @@ describe('clean', function() {
 	});
 
 	it('should delete files and return result (array)', function() {
-		return clean({
+		return task({
 			path: [
 				'hello-world',
 				'goodbye-world'
@@ -84,7 +84,7 @@ describe('clean', function() {
 	});
 
 	it('should pass options to the del library', function() {
-		return clean({
+		return task({
 			path: 'hello-world',
 			options: {
 				force: true,
@@ -101,9 +101,9 @@ describe('clean', function() {
 
 	it('should throw error on library error', function() {
 		return expect(
-			clean({
-				path: 'invalid'
+			task({
+				path: 'error'
 			})
-		).to.be.rejectedWith('Invalid path');
+		).to.be.rejectedWith('Test error');
 	});
 });
