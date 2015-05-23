@@ -4,15 +4,16 @@
   "description": "Delete files and folders",
   "main": "index.js",
   "directories": {
+    "lib": "lib",
     "test": "test"
   },
   "files": [
     "index.js",
-    "tasks"
+    "lib"
   ],
   "scripts": {
     "prepublish": "npm test",
-    "test": "eslint index.js tasks test && mocha --reporter spec"
+    "test": "eslint index.js lib test && mocha --reporter spec"
   },
   "keywords": [
     "skivvy-package",

@@ -1,7 +1,7 @@
 'use strict';
 
 exports.tasks = {
-	'clean': require('./tasks/clean')
+	'clean': require('./lib/tasks/clean')
 };
 
 exports.defaults = {
