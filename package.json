@@ -1,0 +1,52 @@
+{
+  "name": "@skivvy/skivvy-package-clean",
+  "version": "0.1.0",
+  "description": "Delete files and folders",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "files": [
+    "index.js",
+    "tasks"
+  ],
+  "scripts": {
+    "prepublish": "npm test",
+    "test": "eslint index.js tasks test && mocha --reporter spec"
+  },
+  "keywords": [
+    "skivvy-package",
+    "clean",
+    "delete",
+    "del",
+    "rm",
+    "remove",
+    "file",
+    "directory",
+    "folder"
+  ],
+  "author": "Tim Kendrick <timkendrick@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "del": "^1.2.0",
+    "promise": "^7.0.1"
+  },
+  "devDependencies": {
+    "@skivvy/project-base": "latest",
+    "chai": "^2.3.0",
+    "chai-as-promised": "^5.0.0",
+    "eslint": "latest",
+    "mocha": "^2.2.5",
+    "rewire": "^2.3.3",
+    "sinon": "^1.14.1",
+    "sinon-chai": "^2.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skivvyjs/skivvy-package-clean.git"
+  },
+  "bugs": {
+    "url": "https://github.com/skivvyjs/skivvy-package-clean/issues"
+  },
+  "homepage": "https://github.com/skivvyjs/skivvy-package-clean#readme"
+}
