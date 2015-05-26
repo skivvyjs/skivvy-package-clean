@@ -8,30 +8,55 @@ var sinonChai = require('sinon-chai');
 var Promise = require('promise');
 var rewire = require('rewire');
 
-var task = rewire('../../lib/tasks/clean');
-var mockDel = createMockDel();
-task.__set__('del', mockDel);
-
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
-function createMockDel() {
-	return sinon.spy(function(path, options, callback) {
-		setTimeout(function() {
-			if (path === 'error') {
-				callback(new Error('Test error'));
-			} else {
-				var results = Array.isArray(path) ? path : [path];
-				callback(null, results);
-			}
-		});
-	});
-}
-
 describe('task:clean', function() {
+	var mockApi;
+	var mockDel;
+	var task;
+	before(function() {
+		mockApi = createMockApi();
+		mockDel = createMockDel();
+		task = rewire('../../lib/tasks/clean');
+		task.__set__('del', mockDel);
+	});
+
 	afterEach(function() {
 		mockDel.reset();
 	});
+
+	function createMockApi() {
+		return {
+			errors: {
+				TaskError: createCustomError('TaskError')
+			}
+		};
+
+		function createCustomError(type) {
+			function CustomError(message) {
+				this.message = message;
+			}
+
+			CustomError.prototype = Object.create(Error.prototype);
+			CustomError.prototype.name = type;
+
+			return CustomError;
+		}
+	}
+
+	function createMockDel() {
+		return sinon.spy(function(path, options, callback) {
+			setTimeout(function() {
+				if (path === 'error') {
+					callback(new Error('Test error'));
+				} else {
+					var results = Array.isArray(path) ? path : [path];
+					callback(null, results);
+				}
+			});
+		});
+	}
 
 	it('should specify a description', function() {
 		expect(task.description).to.be.a('string');
@@ -44,18 +69,21 @@ describe('task:clean', function() {
 
 	it('should throw an error if no path is specified', function() {
 		var promises = [
-			task({}),
-			task({ path: undefined }),
-			task({ path: null }),
-			task({ path: false })
+			task.call(mockApi, {}),
+			task.call(mockApi, { path: undefined }),
+			task.call(mockApi, { path: null }),
+			task.call(mockApi, { path: false })
 		];
 		return Promise.all(promises.map(function(promise) {
-			expect(promise).to.be.rejectedWith('No path');
+			return Promise.all([
+				expect(promise).to.be.rejectedWith(mockApi.errors.TaskError),
+				expect(promise).to.be.rejectedWith('No path')
+			]);
 		}));
 	});
 
 	it('should delete files and return result (string)', function() {
-		return task({
+		return task.call(mockApi, {
 			path: 'hello-world'
 		})
 			.then(function(results) {
@@ -65,7 +93,7 @@ describe('task:clean', function() {
 	});
 
 	it('should delete files and return result (array)', function() {
-		return task({
+		return task.call(mockApi, {
 			path: [
 				'hello-world',
 				'goodbye-world'
@@ -84,7 +112,7 @@ describe('task:clean', function() {
 	});
 
 	it('should pass options to the mockDel library', function() {
-		return task({
+		return task.call(mockApi, {
 			path: 'hello-world',
 			options: {
 				force: true,
@@ -101,7 +129,7 @@ describe('task:clean', function() {
 
 	it('should throw error on library error', function() {
 		return expect(
-			task({
+			task.call(mockApi, {
 				path: 'error'
 			})
 		).to.be.rejectedWith('Test error');
