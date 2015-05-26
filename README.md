@@ -24,6 +24,13 @@ This package allows you to delete files and folders from within the [Skivvy](htt
 
 Delete files and folders
 
+#### Usage:
+
+```bash
+skivvy run clean
+```
+
+
 #### Configuration settings:
 
 | Name | Type | Required | Default | Description |
