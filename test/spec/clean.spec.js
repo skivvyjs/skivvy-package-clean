@@ -9,8 +9,8 @@ var Promise = require('promise');
 var rewire = require('rewire');
 
 var task = rewire('../../lib/tasks/clean');
-var del = createMockDel();
-task.__set__('del', del);
+var mockDel = createMockDel();
+task.__set__('del', mockDel);
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -28,9 +28,9 @@ function createMockDel() {
 	});
 }
 
-describe('clean', function() {
+describe('task:clean', function() {
 	afterEach(function() {
-		del.reset();
+		mockDel.reset();
 	});
 
 	it('should specify a description', function() {
@@ -59,7 +59,7 @@ describe('clean', function() {
 			path: 'hello-world'
 		})
 			.then(function(results) {
-				expect(del).to.have.been.calledWith('hello-world');
+				expect(mockDel).to.have.been.calledWith('hello-world');
 				expect(results).to.eql(['hello-world']);
 			});
 	});
@@ -72,7 +72,7 @@ describe('clean', function() {
 			]
 		})
 			.then(function(results) {
-				expect(del).to.have.been.calledWith([
+				expect(mockDel).to.have.been.calledWith([
 					'hello-world',
 					'goodbye-world'
 				]);
@@ -83,7 +83,7 @@ describe('clean', function() {
 			});
 	});
 
-	it('should pass options to the del library', function() {
+	it('should pass options to the mockDel library', function() {
 		return task({
 			path: 'hello-world',
 			options: {
@@ -92,7 +92,7 @@ describe('clean', function() {
 			}
 		})
 			.then(function(results) {
-				expect(del).to.have.been.calledWith('hello-world', {
+				expect(mockDel).to.have.been.calledWith('hello-world', {
 					force: true,
 					dot: true
 				});
