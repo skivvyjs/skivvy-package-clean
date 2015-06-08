@@ -35,6 +35,6 @@ skivvy run clean
 
 | Name | Type | Required | Default | Description |
 | ---- | ---- | -------- | ------- | ----------- |
-| `path` | `string`,`Array` | Yes | N/A | Files/folders to delete |
+| `files` | `string`,`Array` | Yes | N/A | Files/folders to delete |
 | `options` | `object` | No | `null` | [Glob options](https://github.com/isaacs/node-glob#options) |
 | `options.force` | `boolean` | No | `false` | Allow deleting of the current working directory and files/folders outside it |

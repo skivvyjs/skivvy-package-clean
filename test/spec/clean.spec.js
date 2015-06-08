@@ -63,28 +63,28 @@ describe('task:clean', function() {
 	});
 
 	it('should specify default configuration', function() {
-		expect(task.defaults.path).to.equal(null);
+		expect(task.defaults.files).to.equal(null);
 		expect(task.defaults.options).to.equal(null);
 	});
 
 	it('should throw an error if no path is specified', function() {
 		var promises = [
 			task.call(mockApi, {}),
-			task.call(mockApi, { path: undefined }),
-			task.call(mockApi, { path: null }),
-			task.call(mockApi, { path: false })
+			task.call(mockApi, { files: undefined }),
+			task.call(mockApi, { files: null }),
+			task.call(mockApi, { files: false })
 		];
 		return Promise.all(promises.map(function(promise) {
 			return Promise.all([
 				expect(promise).to.be.rejectedWith(mockApi.errors.TaskError),
-				expect(promise).to.be.rejectedWith('No path')
+				expect(promise).to.be.rejectedWith('No files')
 			]);
 		}));
 	});
 
 	it('should delete files and return result (string)', function() {
 		return task.call(mockApi, {
-			path: 'hello-world'
+			files: 'hello-world'
 		})
 			.then(function(results) {
 				expect(mockDel).to.have.been.calledWith('hello-world');
@@ -94,7 +94,7 @@ describe('task:clean', function() {
 
 	it('should delete files and return result (array)', function() {
 		return task.call(mockApi, {
-			path: [
+			files: [
 				'hello-world',
 				'goodbye-world'
 			]
@@ -113,7 +113,7 @@ describe('task:clean', function() {
 
 	it('should pass options to the mockDel library', function() {
 		return task.call(mockApi, {
-			path: 'hello-world',
+			files: 'hello-world',
 			options: {
 				force: true,
 				dot: true
@@ -130,7 +130,7 @@ describe('task:clean', function() {
 	it('should throw error on library error', function() {
 		return expect(
 			task.call(mockApi, {
-				path: 'error'
+				files: 'error'
 			})
 		).to.be.rejectedWith('Test error');
 	});
