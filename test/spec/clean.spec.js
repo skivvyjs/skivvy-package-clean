@@ -46,13 +46,13 @@ describe('task:clean', function() {
 	}
 
 	function createMockDel() {
-		return sinon.spy(function(path, options, callback) {
-			setTimeout(function() {
+		return sinon.spy(function(path, options) {
+			return new Promise(function(resolve, reject) {
 				if (path === 'error') {
-					callback(new Error('Test error'));
+					reject(new Error('Test error'));
 				} else {
 					var results = Array.isArray(path) ? path : [path];
-					callback(null, results);
+					resolve(results);
 				}
 			});
 		});
